@@ -17,10 +17,7 @@ typedef struct datosJugador {
 typedef string* nombresJugador; //Hecho para crear listas
 							   //de nombre jugador
 
-//FUNCION HASH
-//sirve para ambos mapas.
 
-int hash(string key);
 
 //----------------------------------------------------------------
 //Mapa de jugadores funciones.
@@ -31,7 +28,7 @@ int igualStr(void* str1,void*str2)
 	return 0;
 }
 
-Map* createMapStr()
+Map* createMapStr();
 {
 	return createMap(igualStr);
 	
@@ -42,8 +39,10 @@ void crearPerfil(Map* jugadores,string nombre)
 	datosJugador* nuevoJugador = malloc(sizeof(datosJugador));
 	nuevoJugador->habilidad=0;
 	nuevoJugador->cantItems=0;
-	nuevoJugador->item = NULL;	
+	nuevoJugador->items = NULL;	
 	
 	insertMap(jugadores,nombre,nuevoJugador);
 	
 }
+
+void mostrarPerfil(Map* jugadores)
