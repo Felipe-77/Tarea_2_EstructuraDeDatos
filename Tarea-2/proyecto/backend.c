@@ -40,11 +40,13 @@ Map* createMapStr()
 
 void crearPerfil(Map* jugadores,string nombre)
 {
-	datosJugador* nuevoJugador = malloc(sizeof(datosJugador));
+	datosJugador* nuevoJugador = (datosJugador *)malloc(sizeof(datosJugador));
 	strcpy(nuevoJugador->nombre,nombre);
 	nuevoJugador->habilidad=0;
 	nuevoJugador->cantItems=0;
 	nuevoJugador->item = createList();
+
+	printf("%s",nuevoJugador->nombre);
 	
 	insertMap(jugadores,nombre,nuevoJugador);
 	
@@ -52,7 +54,10 @@ void crearPerfil(Map* jugadores,string nombre)
 
 void agregarItem(Map* jugadores, string nombre, string item)
 {
-	
+	if (firstMap(jugadores) == NULL){
+		printf("No hay jugadores en el sistema\n");
+		return;
+	}
 	datosJugador* jugador = searchMap(jugadores,nombre);
 	
 	if (jugador == NULL)
@@ -66,12 +71,22 @@ void agregarItem(Map* jugadores, string nombre, string item)
 	
 }
 
-void mostrarPerfil(Map* jugadores, string nombre)
+void mostrarPerfil(Map* jugadores,string nombre)
 {
-	
+	if (firstMap(jugadores) == NULL){
+		printf("No hay jugadores en el sistema\n");
+		return;
+	}
 	datosJugador* jugador = searchMap(jugadores,nombre);
+	if (jugador == NULL)
+	{
+		printf("%s",nombre);
+		printf(" no existe..\n");
+		return;
+	}
 
 	printf("%s: \nHabilidad %d\n Inv size %d Inv \ncontent: ",jugador->nombre,jugador->habilidad,jugador->cantItems);
-	showAll(jugador->item);
+	
+	//showAll(jugador->item);
 	
 }
