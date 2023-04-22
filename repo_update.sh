@@ -22,6 +22,7 @@ commit_message="${description}"                            # ENG-123 Fix duplica
 
 git checkout -- 
 git add .
+git status
 git commit -m "$commit_message"
 git push 
 git pull
