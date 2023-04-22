@@ -2,7 +2,7 @@
 
 # A script to quickly create a branch, add a commit, and push it up.
 
-set -eo pipefail
+#set -eo pipefail
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 

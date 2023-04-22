@@ -6,13 +6,13 @@
 
 typedef char string[MAXCHAR]; 
 
-typedef struct jugadores {
+typedef struct datosJugador {
 	char nombre[MAXCHAR];
 	int habilidad;
 	int cantItems;
 	string* item; //podria ser una lista u otra cosa igualmente
 
-} jugadores;
+} datosJugador;
 
 typedef string* nombresJugador; //Hecho para crear listas
 							   //de nombre jugador
@@ -31,15 +31,19 @@ int igualStr(void* str1,void*str2)
 	return 0;
 }
 
-Map* createMapStr();
+Map* createMapStr()
 {
-	Map* new = createMap(igualStr);
+	return createMap(igualStr);
+	
 }
 
-crearPerfil(Map* jugadores,string nombre)
+void crearPerfil(Map* jugadores,string nombre)
 {
-	if (jugadores == NULL) return NULL;
+	datosJugador* nuevoJugador = malloc(sizeof(datosJugador));
+	nuevoJugador->habilidad=0;
+	nuevoJugador->cantItems=0;
+	nuevoJugador->item = NULL;	
 	
-	
+	insertMap(jugadores,nombre,nuevoJugador);
 	
 }
