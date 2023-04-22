@@ -34,7 +34,6 @@ Tal como:
   - Mostrarlos todos
   - Mostrar solo jugadores que compartan un mismo item
 - Agregar y elminar items a cada perfil
-  
 ---
 
 ### Diseño de la aplicación

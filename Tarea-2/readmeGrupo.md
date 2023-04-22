@@ -1,8 +1,6 @@
 No hecho lo del github para avanzar
 con el proyecto en si. 
 
-
-
 La idea es que lo integren dentro de execute.sh
 
 **En cuanto uno pueda o sepa,subirlo a git.**

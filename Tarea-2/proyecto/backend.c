@@ -1,26 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "Map.h"
+#include "arraylist.h"
+
 #define MAXCHAR 30
+
 
 
 typedef char string[MAXCHAR]; 
 
 typedef struct datosJugador {
-	char nombre[MAXCHAR];
+	string nombre;
 	int habilidad;
 	int cantItems;
-	string* item; //podria ser una lista u otra cosa igualmente
+	ArrayList* item; //podria ser una lista u otra cosa igualmente
 
 } datosJugador;
 
 typedef string* nombresJugador; //Hecho para crear listas
 							   //de nombre jugador
 
-//FUNCION HASH
-//sirve para ambos mapas.
 
-int hash(string key);
 
 //----------------------------------------------------------------
 //Mapa de jugadores funciones.
@@ -40,10 +41,37 @@ Map* createMapStr()
 void crearPerfil(Map* jugadores,string nombre)
 {
 	datosJugador* nuevoJugador = malloc(sizeof(datosJugador));
+	strcpy(nuevoJugador->nombre,nombre);
 	nuevoJugador->habilidad=0;
 	nuevoJugador->cantItems=0;
-	nuevoJugador->item = NULL;	
+	nuevoJugador->item = createList();
 	
 	insertMap(jugadores,nombre,nuevoJugador);
+	
+}
+
+void agregarItem(Map* jugadores, string nombre, string item)
+{
+	
+	datosJugador* jugador = searchMap(jugadores,nombre);
+	
+	if (jugador == NULL)
+	{
+		printf("El jugador no existe aun.\n");
+		return;
+	}
+
+	jugador->cantItems++;
+	append(jugador->item,nombre);
+	
+}
+
+void mostrarPerfil(Map* jugadores, string nombre)
+{
+	
+	datosJugador* jugador = searchMap(jugadores,nombre);
+
+	printf("%s: \nHabilidad %d\n Inv size %d Inv \ncontent: ",jugador->nombre,jugador->habilidad,jugador->cantItems);
+	showAll(jugador->item);
 	
 }
