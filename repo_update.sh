@@ -3,7 +3,7 @@
 #The idea is to use this script in a git cloned repo
 #because then git will be already set
 
-printf "Añade un comentario\n"
+printf "$1\n"
 
 
 
