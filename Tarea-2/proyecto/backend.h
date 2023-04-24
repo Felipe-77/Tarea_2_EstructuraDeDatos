@@ -20,6 +20,7 @@ void agregarItem(Map* jugadores, string nombre, string item);
 
 void mostrarPerfil(Map* jugadores,string nombre);
 
+void showMap(Map*);
 
 
 

@@ -39,6 +39,7 @@ void menuOpcionesDeJugador(Map* jugadores){
 				break;
 			case 3:
 				printf("Funcionlaidad no implemetada por el momento\n");
+				showMap(jugadores);
 				break;
 			case 4:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -79,6 +80,7 @@ void administrarItems(Map* mapaJugadores, Map* mapaItems){
 				break;
 			case 2:
 				printf("Funcionlaidad no implemetada por el momento\n");
+				
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -116,7 +118,7 @@ int main()
 				SEPARADOR;
 				break;
 			case 2:
-				printf("Si\n");
+				showMap(jugadores);
 				break;
 			case 0:
 				printf("Saliendo...\n");

@@ -28,8 +28,8 @@ typedef string* nombresJugador; //Hecho para crear listas
 
 int igualStr(void* str1,void*str2)
 {
-	if (strcmp( (char*) str1, (char*) str2)) return 1;
-	return 0;
+	if (strcmp( (char*) str1, (char*) str2)) return 0;
+	return 1;
 }
 
 Map* createMapStr()
@@ -73,6 +73,12 @@ void agregarItem(Map* jugadores, string nombre, string item)
 
 void mostrarPerfil(Map* jugadores,string nombre)
 {
+	/*
+	datosJugador* jugador = firstMap(jugadores);
+	if (igualStr(jugador->nombre,nombre)) printf("son iguales");
+	if (!igualStr(jugador->nombre,nombre)) printf("no son iguales");
+	*/
+	
 	if (firstMap(jugadores) == NULL){
 		printf("No hay jugadores en el sistema\n");
 		return;
@@ -87,6 +93,16 @@ void mostrarPerfil(Map* jugadores,string nombre)
 
 	printf("%s: \nHabilidad %d\n Inv size %d Inv \ncontent: ",jugador->nombre,jugador->habilidad,jugador->cantItems);
 	
-	//showAll(jugador->item);
+	showAll(jugador->item);
 	
+	
+}
+
+void showMap(Map* map)
+{
+	printf("\nMostrando keys mapa\n");
+	datosJugador* node = firstMap(map);
+	if(node==NULL) return;
+	for (node; nextMap(map)!=NULL; node=nextMap(map))
+		printf("%s",node->nombre);
 }
