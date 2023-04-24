@@ -53,7 +53,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 	}
 }
 
-void administrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
+void menuAdministrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
 	int opcion;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
@@ -70,12 +70,13 @@ void administrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
 			case 1:
 				printf("\nIngrese el nombre del item:\n");
 				scanf("%30[^\n]s", nombreItem);
+				getchar();
 				printf("\nIngrese el nombre del jugador:\n");
 				scanf("%30[^\n]s", nombreJugador);
 				getchar();
 				SEPARADOR;
 				
-				//agregarItem(mapaJugadores, nombreJugador, nombreItem);
+				agregarItem(mapaJugadores,mapaItems, nombreJugador, nombreItem);
 				break;
 			case 2:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -96,7 +97,8 @@ int main()
 {
 	int opcion;
 	HashMap* jugadores = createHashMap(0);
-	
+	HashMap* items = createHashMap(0);
+
 	printf("\n¡Bienvenid@ al sitema de guardado de datos!\n\n");
 	SEPARADOR;
 
@@ -117,6 +119,7 @@ int main()
 				SEPARADOR;
 				break;
 			case 2:
+				menuAdministrarItems(jugadores,items);
 				break;
 			case 0:
 				printf("Saliendo...\n");

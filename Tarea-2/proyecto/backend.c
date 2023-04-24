@@ -24,6 +24,15 @@ typedef string* nombresJugador; //Hecho para crear listas
 
 
 
+
+// Funciones etc
+
+void mostrarLista(ArrayList* l) //imprime una lista de string, con valores espaciados.
+{
+	for (int i = 0; i < get_size(l) ; i++)
+		printf("%s ",get(l,i));
+}
+
 //----------------------------------------------------------------
 //Mapa de jugadores funciones.
 
@@ -74,11 +83,27 @@ void mostrarPerfil(HashMap* jugadores,string nombre)
 		return;
 	}
 
-	printf("Contenido del inventario : [");
+	printf("Contenido del inventario : [ ");
+	mostrarLista(current->item);
+	printf("]\n");
+		
 
 }
 
-void agregarItem(HashMap* jugadores,HashMap* items, string nombre, string nombreItem);
+void agregarItem(HashMap* jugadores,HashMap* items, string nombre, string nombreItem)
+{
+	datosJugador* current = searchMap(jugadores,nombre)->value;
+	if (!current) 
+	{
+		printf("Jugador no encontrado..\n");
+		return;
+	}
+	//asumiendo que no se repite, sino hay que crear un sistema que evite repeticiones.
+	printf("Agregando..\n");
+	append(current->item,nombreItem);
+
+
+}
 
 
 
