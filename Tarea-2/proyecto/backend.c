@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Map.h"
+#include <assert.h>
+#include "hashmap.h"
 #include "arraylist.h"
 
 #define MAXCHAR 30
@@ -26,83 +27,58 @@ typedef string* nombresJugador; //Hecho para crear listas
 //----------------------------------------------------------------
 //Mapa de jugadores funciones.
 
-int igualStr(void* str1,void*str2)
+HashMap* createHashMap(long capacity)
 {
-	if (strcmp( (char*) str1, (char*) str2)) return 0;
-	return 1;
+	HashMap* new=NULL;
+	if (capacity==0)
+		new = createMap(100);
+	else 
+		new = createMap(capacity);
+	
+	if (!new) assert("No hay suficiente memoria");
+
+	return new;
 }
 
-Map* createMapStr()
+void crearPerfil(HashMap* jugadores,string nombre)
 {
-	return createMap(igualStr);
+	datosJugador* new = malloc(sizeof(datosJugador));
+	if (!new) assert("No hay suficiente memoria");
+
+	strcpy(new->nombre,nombre);
+
+	new->habilidad=0;
+	new->cantItems=0;
+	new->item=createList();
 	
+	insertMap(jugadores,nombre,new);
 }
 
-void crearPerfil(Map* jugadores,string nombre)
+void mostrarPerfil(HashMap* jugadores,string nombre)
 {
-	datosJugador* nuevoJugador = (datosJugador *)malloc(sizeof(datosJugador));
-	strcpy(nuevoJugador->nombre,nombre);
-	nuevoJugador->habilidad=0;
-	nuevoJugador->cantItems=0;
-	nuevoJugador->item = createList();
-
-	printf("%s",nuevoJugador->nombre);
+	datosJugador* current = searchMap(jugadores,nombre)->value;
 	
-	insertMap(jugadores,nombre,nuevoJugador);
-	
-}
-
-void agregarItem(Map* jugadores, string nombre, string item)
-{
-	if (firstMap(jugadores) == NULL){
-		printf("No hay jugadores en el sistema\n");
-		return;
-	}
-	datosJugador* jugador = searchMap(jugadores,nombre);
-	
-	if (jugador == NULL)
+	if (!current) 
 	{
-		printf("El jugador no existe aun.\n");
+		printf("%s no existe..\n",nombre);
 		return;
 	}
 
-	jugador->cantItems++;
-	append(jugador->item,nombre);
-	
-}
+	printf("Datos de %s:\n",nombre);
+	printf("Nivel Habilidad : %d\n",current->habilidad);
+	printf("Tamaño inventario : %d\n",current->cantItems);
 
-void mostrarPerfil(Map* jugadores,string nombre)
-{
-	/*
-	datosJugador* jugador = firstMap(jugadores);
-	if (igualStr(jugador->nombre,nombre)) printf("son iguales");
-	if (!igualStr(jugador->nombre,nombre)) printf("no son iguales");
-	*/
-	
-	if (firstMap(jugadores) == NULL){
-		printf("No hay jugadores en el sistema\n");
-		return;
-	}
-	datosJugador* jugador = searchMap(jugadores,nombre);
-	if (jugador == NULL)
+	if (get_size(current->item) == 0)
 	{
-		printf("%s",nombre);
-		printf(" no existe..\n");
+		printf("Inv vacio..\n");
 		return;
 	}
 
-	printf("%s: \nHabilidad %d\n Inv size %d Inv \ncontent: ",jugador->nombre,jugador->habilidad,jugador->cantItems);
-	
-	showAll(jugador->item);
-	
-	
+	printf("Contenido del inventario : [");
+
 }
 
-void showMap(Map* map)
-{
-	printf("\nMostrando keys mapa\n");
-	datosJugador* node = firstMap(map);
-	if(node==NULL) return;
-	for (node; nextMap(map)!=NULL; node=nextMap(map))
-		printf("%s",node->nombre);
-}
+void agregarItem(HashMap* jugadores,HashMap* items, string nombre, string nombreItem);
+
+
+

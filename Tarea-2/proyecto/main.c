@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Map.h"
+#include "hashmap.h"
 #include "backend.h"
 
 #define SEPARADOR printf("\n***********************\n")
 
-void menuOpcionesDeJugador(Map* jugadores){
+void menuOpcionesDeJugador(HashMap* jugadores){
 	int opcion;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
@@ -39,7 +39,6 @@ void menuOpcionesDeJugador(Map* jugadores){
 				break;
 			case 3:
 				printf("Funcionlaidad no implemetada por el momento\n");
-				showMap(jugadores);
 				break;
 			case 4:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -54,7 +53,7 @@ void menuOpcionesDeJugador(Map* jugadores){
 	}
 }
 
-void administrarItems(Map* mapaJugadores, Map* mapaItems){
+void administrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
 	int opcion;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
@@ -76,7 +75,7 @@ void administrarItems(Map* mapaJugadores, Map* mapaItems){
 				getchar();
 				SEPARADOR;
 				
-				agregarItem(mapaJugadores, nombreJugador, nombreItem);
+				//agregarItem(mapaJugadores, nombreJugador, nombreItem);
 				break;
 			case 2:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -96,7 +95,7 @@ void administrarItems(Map* mapaJugadores, Map* mapaItems){
 int main()
 {
 	int opcion;
-	Map* jugadores = createMapStr();
+	HashMap* jugadores = createHashMap(0);
 	
 	printf("\n¡Bienvenid@ al sitema de guardado de datos!\n\n");
 	SEPARADOR;
@@ -118,7 +117,6 @@ int main()
 				SEPARADOR;
 				break;
 			case 2:
-				showMap(jugadores);
 				break;
 			case 0:
 				printf("Saliendo...\n");

@@ -1,6 +1,6 @@
 #ifndef BACKEND_H
 #define BACKEND_H
-#include "Map.h"
+#include "hashmap.h"
 #include "arraylist.h"
 #define MAXCHAR 31
 
@@ -10,17 +10,15 @@ typedef char string[MAXCHAR];
 typedef struct datosJugador datosJugador;
 typedef string* nombresJugador;
 
-int igualStr(void* str1,void*str2);
+HashMap* createHashMap(long); //recibe 0 para usar el default.
 
-Map* createMapStr();
+void crearPerfil(HashMap* jugadores,string nombre);
 
-void crearPerfil(Map* jugadores,string nombre);
+void agregarItem(HashMap* jugadores,HashMap* items, string nombre, string nombreItem);
 
-void agregarItem(Map* jugadores, string nombre, string item);
+void mostrarPerfil(HashMap* jugadores,string nombre);
 
-void mostrarPerfil(Map* jugadores,string nombre);
 
-void showMap(Map*);
 
 
 
