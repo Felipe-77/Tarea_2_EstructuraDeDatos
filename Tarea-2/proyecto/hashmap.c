@@ -78,7 +78,29 @@ void enlarge(HashMap * map) {
     return;
 }
 
+//GPT createMap
 
+HashMap * createMap(long capacity) {
+    HashMap * new = (HashMap *) malloc(sizeof(HashMap));
+    if (new == NULL) exit(EXIT_FAILURE);
+
+    new->buckets = (Pair **) calloc(capacity, sizeof(Pair *));
+    if (new->buckets == NULL)   exit(EXIT_FAILURE);
+
+    for (int i = 0; i < capacity; i++) {
+        new->buckets[i] = NULL;
+    }
+
+    new->capacity = capacity;
+    new->size = 0;
+    new->current = -1;
+
+    return new;
+}
+
+
+
+/*
 HashMap * createMap(long capacity) {
     
     HashMap * new = (HashMap *) malloc(sizeof(HashMap));
@@ -92,6 +114,8 @@ HashMap * createMap(long capacity) {
 
     return new;
 }
+*/
+
 
 void eraseMap(HashMap * map,  char * key) {    
 
@@ -112,6 +136,30 @@ void eraseMap(HashMap * map,  char * key) {
     return ;
 }
 
+//GPT SEARCHMAP
+Pair * searchMap(HashMap * map,  char * key) {   
+    if (map->size == 0) return NULL;
+
+    long index = hash(key, map->capacity);
+    long start = index;
+    while (map->buckets[index] != NULL && map->buckets[index]->key != NULL){
+        
+        if (is_equal(key, map->buckets[index]->key) == 1){
+            map->current = index;
+            return map->buckets[index];
+        }
+        
+        index++;
+
+        if (index >= map->capacity)
+            index = 0;
+
+        if (index == start)
+             break;
+    }
+    return NULL;
+}
+/*
 Pair * searchMap(HashMap * map,  char * key) {   
     if (map->size == 0) return NULL;
 
@@ -130,7 +178,7 @@ Pair * searchMap(HashMap * map,  char * key) {
     }
     return NULL;
 }
-
+*/
 Pair * firstMap(HashMap * map) {
     if (map->size == 0) return NULL;
     long index = 0;

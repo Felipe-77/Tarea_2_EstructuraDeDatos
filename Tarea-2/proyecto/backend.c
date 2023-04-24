@@ -65,8 +65,14 @@ void crearPerfil(HashMap* jugadores,string nombre)
 
 void mostrarPerfil(HashMap* jugadores,string nombre)
 {
-	datosJugador* current = searchMap(jugadores,nombre)->value;
-	
+	Pair* aux = searchMap(jugadores,nombre);
+	if (!aux)
+	{
+		printf("%s no existe..\n",nombre);
+		return;
+	}
+
+	datosJugador* current = aux->value;
 	if (!current) 
 	{
 		printf("%s no existe..\n",nombre);
@@ -92,10 +98,17 @@ void mostrarPerfil(HashMap* jugadores,string nombre)
 
 void agregarItem(HashMap* jugadores,HashMap* items, string nombre, string nombreItem)
 {
-	datosJugador* current = searchMap(jugadores,nombre)->value;
+	Pair* aux = searchMap(jugadores,nombre);
+	if (!aux)
+	{
+		printf("%s no existe..\n",nombre);
+		return;
+	}
+
+	datosJugador* current = aux->value;
 	if (!current) 
 	{
-		printf("Jugador no encontrado..\n");
+		printf("%s no existe..\n",nombre);
 		return;
 	}
 	//asumiendo que no se repite, sino hay que crear un sistema que evite repeticiones.
