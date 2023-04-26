@@ -19,23 +19,13 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
-			char nombre[MAXCHAR];
-			
 			case 1:
-				printf("\nIngrese el nombre para el nuevo perfil:\n");
-				scanf("%30[^\n]s", &nombre);
-				getchar();
+				crearPerfil(jugadores);
 				SEPARADOR;
-				
-				crearPerfil(jugadores, nombre);
 				break;
 			case 2:
-				
-				printf("\nIngrese el nombre del perfil:\n");
-				scanf("%30[^\n]s", &nombre);
-				getchar();
+				mostrarPerfil(jugadores);
 				SEPARADOR;
-				mostrarPerfil(jugadores, nombre);
 				break;
 			case 3:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -65,20 +55,11 @@ void menuAdministrarItems(HashMap* mapaJugadores){
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
-			char nombreJugador[MAXCHAR];
-			char nombreItem[MAXCHAR];
+			
 			
 			case 1:
-				
-				printf("\nIngrese el nombre del item:\n");
-				scanf("%30[^\n]s", &nombreItem);
-				getchar();
-				printf("\nIngrese el nombre del jugador:\n");
-				scanf("%30[^\n]s", &nombreJugador);
-				getchar();
+				agregarItem(mapaJugadores);
 				SEPARADOR;
-				
-				agregarItem(mapaJugadores, nombreJugador, nombreItem);
 				break;
 			case 2:
 				printf("Funcionlaidad no implemetada por el momento\n");
@@ -97,8 +78,6 @@ void menuAdministrarItems(HashMap* mapaJugadores){
 void menuImportarExportar(HashMap* jugadores){
 	int opcion;
 	while (1){
-		char archivo[MAXCHAR];
-
 		printf("Seleccione una de las siguientes opciones:\n\n");
 		//opciones
 		printf("1) Importar datos\n");
@@ -109,14 +88,12 @@ void menuImportarExportar(HashMap* jugadores){
 		getchar();
 		switch (opcion){
 			case 1:
-				printf("\nIngrese el nombre del archivo a importar:\n");
-				scanf("%30[^\n]s", &archivo);
-				getchar();
-				importarDesdeCSV(jugadores, archivo);
+				importarDesdeCSV(jugadores);
 				SEPARADOR;
 				break;
 			case 2:
-				printf("Funcionlaidad no implemetada por el momento\n");
+				exportarCsv(jugadores);
+				SEPARADOR;
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -163,7 +140,7 @@ int main()
 				SEPARADOR;
 				break;
 			case 4:
-				mostrarTodos(jugadores);
+				mostrarKeys(jugadores);
 				SEPARADOR;
 				break;
 			case 0:

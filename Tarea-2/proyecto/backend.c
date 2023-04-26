@@ -7,22 +7,16 @@
 
 #define MAXCHAR 30
 
-//typedef char char[MAXCHAR];
+typedef char string[MAXCHAR];
 
 typedef struct datosJugador
 {
-	char nombre[MAXCHAR];
+	string nombre;
 	int habilidad;
 	int cantItems;
 	HashMap *item; // podria ser una lista u otra cosa igualmente
 
 } datosJugador;
-
-typedef struct item
-{
-	char nombre[MAXCHAR];
-	int cantidad;
-} item;
 
 // Funciones etc
 
@@ -32,22 +26,16 @@ void mostrarLista(ArrayList *l) // imprime una lista de char, con valores espaci
 		printf("%s ", get(l, i));
 }
 
-void mostrarMapa(HashMap* mapa) // imprime un mapa de char, con valores espaciados.
+void mostrarKeys(HashMap* mapa) // imprime todas las keys de un mapa.
 {
-	Pair *current = firstMap(mapa);
-	while (current)
+	Pair * current = firstMap(mapa);
+	while (current != NULL)
 	{
 		printf("%s\n", current->key);
 		current = nextMap(mapa);
 	}
 }
 
-void mostrarTodos(HashMap *jugadores) // imprime todos los jugadores.
-{
-	Pair *current = firstMap(jugadores);
-	while (current)
-		mostrarPerfil(jugadores, current->key);
-}
 
 //----------------------------------------------------------------
 // Mapa de jugadores funciones.
@@ -65,6 +53,7 @@ HashMap *createHashMap(long capacity)
 
 	return new;
 }
+
 datosJugador* crearJugador(){
 	datosJugador *new = (datosJugador *)malloc(sizeof(datosJugador));
 	if (!new)
@@ -72,84 +61,105 @@ datosJugador* crearJugador(){
 
 	new->habilidad = 0;
 	new->cantItems = 0;
-	new->item = createHashMap(new->cantItems);
+	new->item = createHashMap(10);
 	return new;
 }
 
-item* crearItem(){
-	item *new = (item *)malloc(sizeof(item));
-	if (!new)
-		assert("No hay suficiente memoria");
 
-	new->cantidad = 0;
-	return new;
-}
-
-void crearPerfil(HashMap *jugadores, char nombre[MAXCHAR])
+void crearPerfil(HashMap *jugadores)
 {
+	string nombreJugador;
+	printf("\nIngrese nombre del jugador:\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
+
+	Pair *aux = searchMap(jugadores, nombreJugador);
+	if (aux)
+	{
+		printf("%s ya existe..\n", nombreJugador);
+		return;
+	}
+
 	datosJugador *new = crearJugador();
-	strcpy(new->nombre, nombre);
-	insertMap(jugadores, nombre, new);
+	strcpy(new->nombre, nombreJugador);
+	insertMap(jugadores, new->nombre, new);
+
+	printf("\nJugador %s creado correctamente\n", nombreJugador);
 }
 
-void mostrarPerfil(HashMap *jugadores, char nombre[MAXCHAR])
+void mostrarPerfil(HashMap *jugadores)
 {
-	Pair *aux = searchMap(jugadores, nombre);
+	string nombreJugador;
+	printf("\nIngrese nombre del jugador:\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
+
+	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (!aux)
 	{
-		printf("%s no existe..\n", nombre);
+		printf("\n%s no existe..\n", nombreJugador);
 		return;
 	}
 
 	datosJugador *current = aux->value;
 	if (!current)
 	{
-		printf("%s no existe..\n", nombre);
+		printf("\n%s no existe..\n", nombreJugador);
 		return;
 	}
 
-	printf("Datos de %s:\n", nombre);
+	printf("\n");
+	printf("Datos de %s:\n", nombreJugador);
 	printf("Nivel Habilidad : %d\n", current->habilidad);
 	printf("Tamaño inventario : %d\n", current->cantItems);
 
-	if (get_size(current->item) == 0)
+	if (current->cantItems == 0)
 	{
 		printf("Inv vacio..\n");
 		return;
 	}
 
-	printf("Contenido del inventario :");
-	mostrarMapa(current->item);
+	printf("Contenido del inventario :\n");
+	printf("(*)%d items : \n", current->cantItems);
+	mostrarKeys(current->item);
 }
 
-void agregarItem(HashMap *jugadores, char nombre[MAXCHAR], char nombreItem[MAXCHAR])
+void agregarItem(HashMap *jugadores)
 {
-	printf("\nnombre = %s\n", nombre);
-	printf("\nnombreItem = %s\n", nombreItem);
+	string nombreJugador;
+	printf("\nIngrese nombre del jugador:\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
 
-	Pair *aux = searchMap(jugadores, nombre);
-	if (!aux)
+	Pair *aux = searchMap(jugadores, nombreJugador);
+	if (aux == NULL)
 	{
-		printf("%s no existe..\n", nombre);
+		printf("%s no existe..\n", nombreJugador);
 		return;
 	}
-
 	datosJugador *current = aux->value;
 
-	if (!current)
-	{
-		printf("%s no existe..\n", nombre);
-		return;
-	}
+	string * nombreItem = malloc(sizeof(char) * MAXCHAR);
+	printf("\nIngrese nombre del item:\n");
+	scanf("%30[^\n]s", nombreItem);
+	getchar();
+
 	// asumiendo que no se repite, sino hay que crear un sistema que evite repeticiones.
-	printf("Agregando..\n");
-	append(current->item, nombreItem);
+	printf("\nAgregando item..\n");
+	current->cantItems++;
+	insertMap(current->item, nombreItem, nombreItem);
 }
 
 
-void importarDesdeCSV(HashMap* jugadores, char archivo[MAXCHAR]) {
-	FILE *csv = fopen(archivo, "r");
+void importarDesdeCSV(HashMap* jugadores) {
+	string archivo;
+	printf("\nIngrese nombre del archivo:\n");
+	scanf("%30[^\n]s", archivo);
+	getchar();
 
+	FILE *csv = fopen(archivo, "r");
+	clean(jugadores);
+	jugadores = createHashMap(1000);
 	if (!csv) {
     	printf("\nEl archivo no existe\n");
     	return;
@@ -160,7 +170,6 @@ void importarDesdeCSV(HashMap* jugadores, char archivo[MAXCHAR]) {
   	while (fgets(buffer, sizeof(buffer), csv)) {
     	linea++;
     	if (linea == 1) continue;
-		printf("\n%d", linea);
     	buffer[strcspn(buffer, "\n")] = 0; // quitar el salto de linea
 
     	datosJugador *jugador = crearJugador();
@@ -168,17 +177,16 @@ void importarDesdeCSV(HashMap* jugadores, char archivo[MAXCHAR]) {
     	char *valor = strtok(buffer, ",");
 
     	while (valor != NULL) {
-			printf("-%d", columna);
     		if (columna == 1)
         		strcpy(jugador->nombre, valor);
     		if (columna == 2)
-        		jugador->habilidad = (int)strtol(valor, NULL, 10);
+        		jugador->habilidad = (int)strtol(valor, NULL, 10); 
       		if (columna == 3)
         		jugador->cantItems = (int)strtol(valor, NULL, 10);
       		if (columna > 3){
-				item * item = crearItem();
-				strcpy(item->nombre, valor);
-				insertMap(jugador->item, item->nombre, item);
+				string * item = (string *)malloc(sizeof(char) * MAXCHAR);
+				strcpy(item, valor);
+				insertMap(jugador->item, item, item);
 	  		}
 			valor = strtok(NULL, ",");
     		columna++;
@@ -192,26 +200,43 @@ void importarDesdeCSV(HashMap* jugadores, char archivo[MAXCHAR]) {
   	return;
 }
 
-void exportarCSV(HashMap* jugadores, char archivo[MAXCHAR]) {
-	FILE *csv = fopen(archivo, "w");
+/*void exportarCsv(HashMap* jugadores) {
 
-  	fprintf(csv, "Nombre,Habilidad,Cantidad de Items,Items\n");
+	string archivo;
+	printf("\nIngrese el nombre para el nuevo archivo:\n");
+	scanf("%30[^\n]s", archivo);
+	getchar();
 
-  	Pair *current = firstMap(jugadores);
-	while (current) {
-		datosJugador *aux = current->value;
-		fprintf(csv, "%s,%d,%d,", aux->nombre, aux->habilidad, aux->cantItems);
-		Pair *currentItem = firstMap(aux->item);
-		while (currentItem) {
-			item *auxItem = currentItem->value;
-			fprintf(csv, "%s,", auxItem->nombre);
-			currentItem = nextMap(aux->item);
-		}
-		fprintf(csv, "\n");
-		current = nextMap(jugadores);
-	}
+  	FILE *nuevoCsv = fopen(archivo, "r");
+  
+  	if (nuevoCsv) {
+    	printf("\nEl archivo ya existe\n");
+    	fclose(nuevoCsv);
+    	return;
+  	}
+  
+  	nuevoCsv = fopen(archivo, "w");
+
+  	if (!nuevoCsv) {
+    	printf("No se puede crear el archivo\n");
+    	fclose(nuevoCsv);
+    	return;
+  	}
+	
+  	Pair * current = (Pair *)firstMap(jugadores);
+  	while (current != NULL) {
+		datosJugador * jugador = current->value;
+    	fprintf(nuevoCsv, "%s,%d,%d", jugador->nombre, jugador->habilidad, jugador->cantItems);
+
+    	for (int k = 0; k < jugador->cantItems; k++) {
+
+    		fprintf(nuevoCsv,",%s", jugador->item[k]->key);
+    	}
+    	fprintf(nuevoCsv, "\n");
+  	}
 
   	printf("\nArchivo exportado correctamente\n");
-  	fclose(csv);
+  	fclose(nuevoCsv);
   	return;
 }
+*/
