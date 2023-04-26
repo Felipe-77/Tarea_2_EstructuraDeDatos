@@ -155,7 +155,7 @@ Pair * searchMap(HashMap * map,  char * key) {
             index = 0;
 
         if (index == start)
-             break;
+            break;
     }
     return NULL;
 }

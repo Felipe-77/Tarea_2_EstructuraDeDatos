@@ -19,11 +19,11 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
-			string nombre;
+			char nombre[MAXCHAR];
 			
 			case 1:
 				printf("\nIngrese el nombre para el nuevo perfil:\n");
-				scanf("%30[^\n]s", nombre);
+				scanf("%30[^\n]s", &nombre);
 				getchar();
 				SEPARADOR;
 				
@@ -32,7 +32,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 			case 2:
 				
 				printf("\nIngrese el nombre del perfil:\n");
-				scanf("%30[^\n]s", nombre);
+				scanf("%30[^\n]s", &nombre);
 				getchar();
 				SEPARADOR;
 				mostrarPerfil(jugadores, nombre);
@@ -53,7 +53,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 	}
 }
 
-void menuAdministrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
+void menuAdministrarItems(HashMap* mapaJugadores){
 	int opcion;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
@@ -65,22 +65,58 @@ void menuAdministrarItems(HashMap* mapaJugadores, HashMap* mapaItems){
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
-			string nombreJugador, nombreItem;
+			char nombreJugador[MAXCHAR];
+			char nombreItem[MAXCHAR];
 			
 			case 1:
+				
 				printf("\nIngrese el nombre del item:\n");
-				scanf("%30[^\n]s", nombreItem);
+				scanf("%30[^\n]s", &nombreItem);
 				getchar();
 				printf("\nIngrese el nombre del jugador:\n");
-				scanf("%30[^\n]s", nombreJugador);
+				scanf("%30[^\n]s", &nombreJugador);
 				getchar();
 				SEPARADOR;
 				
-				agregarItem(mapaJugadores,mapaItems, nombreJugador, nombreItem);
+				agregarItem(mapaJugadores, nombreJugador, nombreItem);
 				break;
 			case 2:
 				printf("Funcionlaidad no implemetada por el momento\n");
 				
+				break;
+			case 0:
+				printf("Volviendo...\n");
+				return;
+			default:
+				printf("Opción inválida\n\n");
+				break;
+		}
+	}
+}
+
+void menuImportarExportar(HashMap* jugadores){
+	int opcion;
+	while (1){
+		char archivo[MAXCHAR];
+
+		printf("Seleccione una de las siguientes opciones:\n\n");
+		//opciones
+		printf("1) Importar datos\n");
+		printf("2) Exportar datos\n");
+		printf("0) Volver al menu principal\n");
+
+		scanf("%i", &opcion);
+		getchar();
+		switch (opcion){
+			case 1:
+				printf("\nIngrese el nombre del archivo a importar:\n");
+				scanf("%30[^\n]s", &archivo);
+				getchar();
+				importarDesdeCSV(jugadores, archivo);
+				SEPARADOR;
+				break;
+			case 2:
+				printf("Funcionlaidad no implemetada por el momento\n");
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -97,7 +133,6 @@ int main()
 {
 	int opcion;
 	HashMap* jugadores = createHashMap(0);
-	HashMap* items = createHashMap(0);
 
 	printf("\n¡Bienvenid@ al sitema de guardado de datos!\n\n");
 	SEPARADOR;
@@ -108,6 +143,7 @@ int main()
 		printf("1) Opciones de jugador/a\n");
 		printf("2) Administrar items\n");
 		printf("3) Importar/Exportar\n");
+		printf("4) Mostrar todos los jugadores\n");
 		printf("0) Salir\n");
 		scanf("%i", &opcion);
 		getchar();
@@ -119,7 +155,16 @@ int main()
 				SEPARADOR;
 				break;
 			case 2:
-				menuAdministrarItems(jugadores,items);
+				menuAdministrarItems(jugadores);
+				SEPARADOR;
+				break;
+			case 3:
+				menuImportarExportar(jugadores);
+				SEPARADOR;
+				break;
+			case 4:
+				mostrarTodos(jugadores);
+				SEPARADOR;
 				break;
 			case 0:
 				printf("Saliendo...\n");
