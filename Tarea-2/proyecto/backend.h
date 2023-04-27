@@ -1,7 +1,7 @@
 #ifndef BACKEND_H
 #define BACKEND_H
-#include "hashmap.h"
-#include "arraylist.h"
+#include "HashMap/hashmap.h"
+#include "arraylist/arraylist.h"
 #define MAXCHAR 31
 
 

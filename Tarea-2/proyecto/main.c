@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "hashmap.h"
+#include "HashMap/hashmap.h"
 #include "backend.h"
 
 #define SEPARADOR printf("\n***********************\n")
@@ -28,10 +28,12 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 				SEPARADOR;
 				break;
 			case 3:
-				printf("Funcionlaidad no implemetada por el momento\n");
+				agregarPuntosHabilidad(jugadores);
+				SEPARADOR;
 				break;
 			case 4:
-				printf("Funcionlaidad no implemetada por el momento\n");
+				deshacerUltAccion(jugadores);
+				SEPARADOR;
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -43,7 +45,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 	}
 }
 
-void menuAdministrarItems(HashMap* mapaJugadores){
+void menuAdministrarItems(HashMap* jugadores){
 	int opcion;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
@@ -58,12 +60,11 @@ void menuAdministrarItems(HashMap* mapaJugadores){
 			
 			
 			case 1:
-				agregarItem(mapaJugadores);
+				agregarItem(jugadores);
 				SEPARADOR;
 				break;
 			case 2:
-				printf("Funcionlaidad no implemetada por el momento\n");
-				
+				eliminarItem(jugadores);
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -92,7 +93,7 @@ void menuImportarExportar(HashMap* jugadores){
 				SEPARADOR;
 				break;
 			case 2:
-				exportarCsv(jugadores);
+				//exportarCsv(jugadores);
 				SEPARADOR;
 				break;
 			case 0:
