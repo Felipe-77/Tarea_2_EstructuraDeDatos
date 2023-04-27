@@ -2,10 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "hashmap.h"
-#include "arraylist.h"
+#include "HashMap/hashmap.h"
+#include "ArrayList/arraylist.h"
 
-#define MAXCHAR 30
+#define MAXCHAR 31
+
+#define id_agregarHabilidad 1
+#define id_agregarItem 2
+#define id_eliminarItem 3
+
 
 typedef char string[MAXCHAR];
 
@@ -15,8 +20,16 @@ typedef struct datosJugador
 	int habilidad;
 	int cantItems;
 	HashMap *item; // podria ser una lista u otra cosa igualmente
-
+	ArrayList *pilaAcciones;
 } datosJugador;
+
+typedef struct accion 
+{
+	int id;
+	void * data;
+} accion;
+
+
 
 // Funciones etc
 
@@ -54,7 +67,8 @@ HashMap *createHashMap(long capacity)
 	return new;
 }
 
-datosJugador* crearJugador(){
+datosJugador* crearJugador()
+{
 	datosJugador *new = (datosJugador *)malloc(sizeof(datosJugador));
 	if (!new)
 		assert("No hay suficiente memoria");
@@ -64,7 +78,6 @@ datosJugador* crearJugador(){
 	new->item = createHashMap(10);
 	return new;
 }
-
 
 void crearPerfil(HashMap *jugadores)
 {
@@ -83,8 +96,15 @@ void crearPerfil(HashMap *jugadores)
 	datosJugador *new = crearJugador();
 	strcpy(new->nombre, nombreJugador);
 	insertMap(jugadores, new->nombre, new);
-
 	printf("\nJugador %s creado correctamente\n", nombreJugador);
+	return;
+}
+
+void eliminarPerfil(HashMap *jugadores, string nombreJugador)
+{
+	eraseMap(jugadores, nombreJugador);
+	printf("\nSe ha eliminado a %s\n", nombreJugador);
+	return 1;
 }
 
 void mostrarPerfil(HashMap *jugadores)
@@ -144,14 +164,96 @@ void agregarItem(HashMap *jugadores)
 	scanf("%30[^\n]s", nombreItem);
 	getchar();
 
-	// asumiendo que no se repite, sino hay que crear un sistema que evite repeticiones.
+	Pair * item = searchMap(current->item, nombreItem);
+	if (item != NULL){
+		printf("\nEl item ya está en el inventario\n");
+		return;
+	}
 	printf("\nAgregando item..\n");
 	current->cantItems++;
 	insertMap(current->item, nombreItem, nombreItem);
+	printf("\nSe ha agregado el item..\n");
+
+	accion * accion = malloc(sizeof(accion));
+	accion->id = id_agregarItem;
+	accion->data = nombreItem;
+	append(current->pilaAcciones, accion);	// se agrega a la pila de acciones.
+	return;
 }
 
+int eliminarItem(HashMap *jugadores)
+{
+	string nombreJugador;
+	printf("\nIngrese nombre del jugador:\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
 
-void importarDesdeCSV(HashMap* jugadores) {
+	Pair *aux = searchMap(jugadores, nombreJugador);
+	if (aux == NULL)
+	{
+		printf("%s no existe..\n", nombreJugador);
+		return 0;
+	}
+	datosJugador *current = aux->value;
+
+	string nombreItem;
+	printf("\nIngrese nombre del item:\n");
+	scanf("%30[^\n]s", nombreItem);
+	getchar();
+
+	Pair *item = searchMap(current->item, nombreItem);
+	if (item == NULL)
+	{
+		printf("%s no existe..\n", nombreItem);
+		return 0;
+	}
+
+	printf("\nEliminando item..\n");
+	current->cantItems--;
+	eraseMap(current->item, nombreItem);
+	printf("\nSe eliminado el item..\n");
+
+	accion * accion = malloc(sizeof(accion));
+	accion->id = id_eliminarItem;
+	accion->data = nombreItem;
+	append(current->pilaAcciones, accion);	// se agrega a la pila de acciones.
+	return 1;
+}
+
+void agregarPuntosHabilidad(HashMap* jugadores)
+{
+	string nombreJugador;
+	printf("\nIngrese el nombre del jugador\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
+
+	Pair * current = searchMap(jugadores, nombreJugador);
+	if (current == NULL)
+	{
+		printf("\n%s no existe..\n", nombreJugador);
+		return;
+	}
+
+	int puntosNuevos;
+	printf("\n¿Cuántos puntos desea agregar?\n");
+	scanf("%i", &puntosNuevos);
+
+	datosJugador * jugador = current->value;
+	jugador->habilidad += puntosNuevos;
+
+	
+	accion * accion = malloc(sizeof(accion));
+	accion->id = id_agregarHabilidad;
+	accion->data = puntosNuevos;
+	ArrayList * l = jugador->pilaAcciones;
+	append(l, accion);	// se agrega a la pila de acciones
+	printf("\nPuntos agregados correctamente\n");
+	return 1;
+
+}
+
+void importarDesdeCSV(HashMap* jugadores) 
+{
 	string archivo;
 	printf("\nIngrese nombre del archivo:\n");
 	scanf("%30[^\n]s", archivo);
@@ -230,7 +332,7 @@ void importarDesdeCSV(HashMap* jugadores) {
 
     	for (int k = 0; k < jugador->cantItems; k++) {
 
-    		fprintf(nuevoCsv,",%s", jugador->item[k]->key);
+    		fprintf(nuevoCsv,",%s", jugador->item->key);
     	}
     	fprintf(nuevoCsv, "\n");
   	}
@@ -240,3 +342,36 @@ void importarDesdeCSV(HashMap* jugadores) {
   	return;
 }
 */
+
+void deshacerUltAccion(HashMap* jugadores)
+{
+	string nombreJugador;
+	printf("\nIngrese el nombre del jugador:\n");
+	scanf("%30[^\n]s", nombreJugador);
+	getchar();
+
+	Pair * jugador = searchMap(jugadores, nombreJugador);
+	datosJugador * datosJugador = jugador->value;
+	ArrayList * l = datosJugador->pilaAcciones;
+
+	int top = get_size(l) - 1;
+	accion * accion = get(l, top);
+
+	switch (accion->id)
+	{
+		case id_agregarHabilidad:
+			datosJugador->habilidad -= (int) accion->data;
+			printf("\nSe han eliminado %d puntos de habilidad a %s\n", accion->data, datosJugador->nombre);
+			break;
+		case id_agregarItem:
+			eraseMap(jugadores, accion->data);
+			printf("\nSe eliminado el ultimo item\n");
+			break;
+		case id_eliminarItem:
+			string * item = malloc(sizeof(char) * MAXCHAR);
+			strcpy(item, accion->data);
+			insertMap(jugadores, item, item);
+			printf("\nSe ha recuperado el ultimo item\n");
+			break;
+	}
+}

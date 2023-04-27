@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "arraylist.h"
-#define MAXCHAR 31
 
 //normal array
 typedef struct ArrayList {
@@ -10,8 +9,6 @@ typedef struct ArrayList {
     int capacity;
     int size;
 } ArrayList;
-
-
 
 ArrayList *createList(void) {
 
@@ -83,14 +80,6 @@ void* get(ArrayList * l, int i){
 
 int get_size(ArrayList * l){
     return l->size;
-}
-
-//recorrer
-void showAll(ArrayList* l)
-{
-	for (int i = 0; i < get_size(l);i++)
-		printf("%d ",get(l,i));
-	printf("\n");
 }
 
 //remove elements
