@@ -3,8 +3,9 @@
 #include <string.h>
 #include <assert.h>
 #include "HashMap/hashmap.h"
-#include "arraylist/arraylist.h"
-#define MAXCHAR 30
+#include "ArrayList/arraylist.h"
+
+#define MAXCHAR 31
 
 #define id_agregarHabilidad 1
 #define id_agregarItem 2
