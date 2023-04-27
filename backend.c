@@ -41,12 +41,23 @@ void mostrarLista(ArrayList *l) // imprime una lista de char, con valores espaci
 		printf("%s ", get(l, i));
 }
 
-void mostrarKeys(HashMap* mapa) // imprime todas las keys de un mapa.
+void mostrarItems(HashMap *mapa) // imprime todas las keys de un mapa.
 {
 	Pair * current = firstMap(mapa);
 	while (current != NULL)
 	{
-		printf("%s\n", current->key);
+		printf("\n- %s", current->key);
+		current = nextMap(mapa);
+	}
+}
+
+void mostrarTodos(HashMap* mapa) // imprime todas las keys de un mapa.
+{
+	Pair * current = firstMap(mapa);
+	while (current != NULL)
+	{
+		mostrarPerfil(mapa, current->key);
+		printf("\n--------------------------------\n");
 		current = nextMap(mapa);
 	}
 }
@@ -102,11 +113,10 @@ accion* crearAccion(int id, void* data)
 void mostrarPerfil(Map* jugadores)
 =======
 	accion *new = (accion *)malloc(sizeof(accion));
-	if (!new)
-		assert("No hay suficiente memoria");
-
+	if (!new) assert("No hay suficiente memoria");
 	new->id = id;
 	new->data = data;
+
 	return new;
 }
 
@@ -151,8 +161,7 @@ void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 
 	printf("\n");
 	printf("Datos de %s:\n", nombreJugador);
-	printf("Nivel Habilidad : %d\n", current->habilidad);
-	printf("Tamaño inventario : %d\n", current->cantItems);
+	printf("Puntos de habilidad : %d\n", current->habilidad);
 
 	if (current->cantItems == 0)
 	{
@@ -161,8 +170,11 @@ void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 	}
 
 	printf("Contenido del inventario :\n");
-	printf("(*)%d items : \n", current->cantItems);
-	mostrarKeys(current->item);
+	if (current->cantItems > 1)
+		printf("%d items\n", current->cantItems);
+	else
+		printf("%d item\n", current->cantItems);
+	mostrarItems(current->item);
 }
 
 int agregarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
@@ -214,7 +226,7 @@ int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	return 1;
 }
 
-int agregarPuntosHabilidad(HashMap* jugadores, string nombreJugador, int* puntosNuevos)
+int agregarPuntosHabilidad(HashMap* jugadores, string nombreJugador, int puntosNuevos)
 {
 	Pair * current = searchMap(jugadores, nombreJugador);
 	if (current == NULL)
@@ -223,21 +235,18 @@ int agregarPuntosHabilidad(HashMap* jugadores, string nombreJugador, int* puntos
 		return 0;
 	}
 	datosJugador * jugador = current->value;
-	jugador->habilidad += *puntosNuevos;
-	printf("\nSe han agregado %d puntos de habilidad a %s\n", *puntosNuevos, nombreJugador);
+	jugador->habilidad += puntosNuevos;
+	printf("\nSe han agregado %d puntos de habilidad a %s\n", puntosNuevos, nombreJugador);
 
 
 	return 1;
 
 }
 
-void importarDesdeCSV(HashMap* jugadores) 
+void importarDesdeCSV(HashMap* jugadores, string archivo) 
 {
-	string archivo;
-	printf("\nIngrese nombre del archivo:\n");
-	scanf("%30[^\n]s", archivo);
-	getchar();
-
+	free(jugadores);
+	jugadores = createHashMap(0);
 	FILE *csv = fopen(archivo, "r");
 	clean(jugadores);
 	jugadores = createHashMap(1000);
@@ -330,29 +339,37 @@ void deshacerUltAccion(HashMap* jugadores, string nombreJugador)
 		printf("\n%s no existe..\n", nombreJugador);
 		return;
 	}
-	datosJugador* jugador = (datosJugador *) current->value;
+
+	datosJugador* jugador = (datosJugador *)current->value;
 	ArrayList * l = jugador->pilaAcciones;
-
-	int top = get_size(l) - 1;
-	accion * accion = get(l, top);
-
-	printf("\nDeshaciendo accion..\n");
-	if (accion->id == id_agregarHabilidad)
+	if (get_size(l) == 0)
 	{
-		jugador->habilidad -=(int) accion->data;
-		printf("\nSe han eliminado %d puntos de habilidad a %s\n", accion->data, jugador->nombre);
+		printf("\nNo hay acciones para deshacer..\n");
+		return;
 	}
 
-	if (accion->id == id_agregarItem)
+	int top = (get_size(l) - 1);
+	accion * ultAccion =  get(l, top);
+	
+	int id = ultAccion->id;
+	if (id == id_agregarHabilidad)
 	{
-		eraseMap(jugador->pilaAcciones, accion->data);
+		jugador->habilidad -= (int)ultAccion->data;
+		printf("\nSe han eliminado %d puntos de habilidad a %s\n", ultAccion->data, jugador->nombre);
+	}
+
+	if (id == id_agregarItem)
+	{
+		eraseMap(jugador->item, ultAccion->data);
 		printf("\nSe eliminado el ultimo item\n");
 	}
 
-	if (accion->id == id_eliminarItem)
+	if (id == id_eliminarItem)
 	{
-		insertMap(jugador->pilaAcciones, accion->data, accion->data);
+		insertMap(jugador->item, ultAccion->data, ultAccion->data);
 		printf("\nSe ha recuperado el ultimo item\n");
 	}
+
+	pop(l, top);
 }
 >>>>>>> 763e8a71db0a2b5443ba5a58f4494a82d61b5c51:Tarea-2/proyecto/backend.c
