@@ -31,7 +31,7 @@ struct accion
 
 void menuOpcionesDeJugador(HashMap* jugadores){
 	int opcion;
-	int* puntosHabilidad;
+	int puntosHabilidad;
 	string nombreJugador;
 
 	while (1){
@@ -67,9 +67,8 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 				scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
-				puntosHabilidad = malloc(sizeof(int));
 				printf("\n¿Cuántos puntos de habilidad desea agregar?:\n");
-				scanf("%i", puntosHabilidad);
+				scanf("%i", &puntosHabilidad);
 				getchar();
 
 				if (agregarPuntosHabilidad(jugadores, nombreJugador, puntosHabilidad) == 1){
@@ -150,6 +149,7 @@ void menuAdministrarItems(HashMap* jugadores){
 					datosJugador* jugador = (datosJugador *) current->value;
 					append(jugador->pilaAcciones, accion);	// se agrega a la pila de acciones.
 				}
+				SEPARADOR;
 				break;
 			case 0:
 				printf("Volviendo...\n");
@@ -163,6 +163,7 @@ void menuAdministrarItems(HashMap* jugadores){
 
 void menuImportarExportar(HashMap* jugadores){
 	int opcion;
+	string archivo;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
 		//opciones
@@ -174,7 +175,11 @@ void menuImportarExportar(HashMap* jugadores){
 		getchar();
 		switch (opcion){
 			case 1:
-				importarDesdeCSV(jugadores);
+				printf("\nIngrese nombre del archivo:\n");
+				scanf("%30[^\n]s", archivo);
+				getchar();
+
+				importarDesdeCSV(jugadores, archivo);
 				SEPARADOR;
 				break;
 			case 2:
@@ -226,7 +231,7 @@ int main()
 				SEPARADOR;
 				break;
 			case 4:
-				mostrarKeys(jugadores);
+				mostrarTodos(jugadores);
 				SEPARADOR;
 				break;
 			case 0:
