@@ -9,18 +9,18 @@
 typedef char string[MAXCHAR]; 
 
 typedef struct datosJugador datosJugador;
-
-typedef char* nombresJugador;
+typedef struct accion accion;
 
 HashMap* createHashMap(long); //recibe 0 para usar el default.
 
-void crearPerfil(HashMap* jugadores);
+void crearPerfil(HashMap* jugadores, string nombreJugador);
 
-void agregarItem(HashMap* jugadores);
+int agregarItem(HashMap* jugadores, string nombreJugador, string nombreItem);
 
-void mostrarPerfil(HashMap* jugadores);
+void mostrarPerfil(HashMap* jugadores, string nombreJugador);
 
 void exportarCsv(HashMap* jugadores);
+
 
 
 

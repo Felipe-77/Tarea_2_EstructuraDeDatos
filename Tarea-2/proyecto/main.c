@@ -1,12 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "HashMap/hashmap.h"
+#include "ArrayList/arraylist.h"
 #include "backend.h"
 
 #define SEPARADOR printf("\n***********************\n")
+#define id_agregarHabilidad 1
+#define id_agregarItem 2
+#define id_eliminarItem 3
+
+typedef char string[MAXCHAR];
+typedef struct datosJugador datosJugador;
+typedef struct accion accion;
+
+struct datosJugador
+{
+	string nombre;
+	int habilidad;
+	int cantItems;
+	HashMap *item; // podria ser una lista u otra cosa igualmente
+	ArrayList *pilaAcciones;
+};
+
+struct accion 
+{
+	int id;
+	void * data;
+};
+
 
 void menuOpcionesDeJugador(HashMap* jugadores){
 	int opcion;
+	int* puntosHabilidad;
+	string nombreJugador;
+
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
 		//opciones
@@ -20,19 +47,45 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 		getchar();
 		switch (opcion){
 			case 1:
-				crearPerfil(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				crearPerfil(jugadores, nombreJugador);
 				SEPARADOR;
 				break;
 			case 2:
-				mostrarPerfil(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				mostrarPerfil(jugadores, nombreJugador);
 				SEPARADOR;
 				break;
 			case 3:
-				agregarPuntosHabilidad(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				puntosHabilidad = malloc(sizeof(int));
+				printf("\n¿Cuántos puntos de habilidad desea agregar?:\n");
+				scanf("%i", puntosHabilidad);
+				getchar();
+
+				if (agregarPuntosHabilidad(jugadores, nombreJugador, puntosHabilidad) == 1){
+					accion * accion = crearAccion(id_agregarHabilidad, puntosHabilidad);
+					Pair * current = (Pair *) searchMap(jugadores, nombreJugador);
+					datosJugador* jugador = (datosJugador *) current->value;
+					append(jugador->pilaAcciones, accion);	// se agrega a la pila de acciones.
+				}
 				SEPARADOR;
 				break;
 			case 4:
-				deshacerUltAccion(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				deshacerUltAccion(jugadores, nombreJugador);
 				SEPARADOR;
 				break;
 			case 0:
@@ -47,6 +100,8 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 
 void menuAdministrarItems(HashMap* jugadores){
 	int opcion;
+	string nombreJugador;
+
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
 		//opciones
@@ -60,11 +115,41 @@ void menuAdministrarItems(HashMap* jugadores){
 			
 			
 			case 1:
-				agregarItem(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				string* nombreItem = malloc(sizeof(char) * MAXCHAR);
+				printf("\nIngrese nombre del item:\n");
+				scanf("%30[^\n]s", nombreItem);
+				getchar();
+
+				if (agregarItem(jugadores, nombreJugador, nombreItem) == 1){
+					accion * accion = crearAccion(id_agregarItem, nombreItem);
+					Pair * current = (Pair *) searchMap(jugadores, nombreJugador);
+					datosJugador* jugador = (datosJugador *) current->value;
+					append(jugador->pilaAcciones, accion);	// se agrega a la pila de acciones.				
+				}
 				SEPARADOR;
 				break;
 			case 2:
-				eliminarItem(jugadores);
+				printf("\nIngrese nombre del jugador:\n");
+				scanf("%30[^\n]s", nombreJugador);
+				getchar();
+
+				printf("\nIngrese nombre del item:\n");
+				scanf("%30[^\n]s", nombreItem);
+				getchar();
+
+				if (eliminarItem(jugadores, nombreJugador, nombreItem) == 1){
+					string* itemRecuperado = malloc(sizeof(char) * MAXCHAR);
+					strcpy(itemRecuperado, nombreItem);
+
+					accion * accion = crearAccion(id_eliminarItem, itemRecuperado);
+					Pair * current = (Pair *) searchMap(jugadores, nombreJugador);
+					datosJugador* jugador = (datosJugador *) current->value;
+					append(jugador->pilaAcciones, accion);	// se agrega a la pila de acciones.
+				}
 				break;
 			case 0:
 				printf("Volviendo...\n");

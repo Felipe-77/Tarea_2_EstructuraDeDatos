@@ -13,23 +13,23 @@
 
 
 typedef char string[MAXCHAR];
+typedef struct datosJugador datosJugador;
+typedef struct accion accion;
 
-typedef struct datosJugador
+struct datosJugador
 {
 	string nombre;
 	int habilidad;
 	int cantItems;
 	HashMap *item; // podria ser una lista u otra cosa igualmente
 	ArrayList *pilaAcciones;
-} datosJugador;
+};
 
-typedef struct accion 
+struct accion 
 {
 	int id;
 	void * data;
-} accion;
-
-
+};
 
 // Funciones etc
 
@@ -76,16 +76,23 @@ datosJugador* crearJugador()
 	new->habilidad = 0;
 	new->cantItems = 0;
 	new->item = createHashMap(10);
+	new->pilaAcciones = createList();
 	return new;
 }
 
-void crearPerfil(HashMap *jugadores)
+accion* crearAccion(int id, void* data)
 {
-	string nombreJugador;
-	printf("\nIngrese nombre del jugador:\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
+	accion *new = (accion *)malloc(sizeof(accion));
+	if (!new)
+		assert("No hay suficiente memoria");
 
+	new->id = id;
+	new->data = data;
+	return new;
+}
+
+void crearPerfil(HashMap *jugadores, string nombreJugador)
+{
 	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (aux)
 	{
@@ -107,13 +114,8 @@ void eliminarPerfil(HashMap *jugadores, string nombreJugador)
 	return 1;
 }
 
-void mostrarPerfil(HashMap *jugadores)
+void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 {
-	string nombreJugador;
-	printf("\nIngrese nombre del jugador:\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
-
 	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (!aux)
 	{
@@ -144,50 +146,8 @@ void mostrarPerfil(HashMap *jugadores)
 	mostrarKeys(current->item);
 }
 
-void agregarItem(HashMap *jugadores)
+int agregarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 {
-	string nombreJugador;
-	printf("\nIngrese nombre del jugador:\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
-
-	Pair *aux = searchMap(jugadores, nombreJugador);
-	if (aux == NULL)
-	{
-		printf("%s no existe..\n", nombreJugador);
-		return;
-	}
-	datosJugador *current = aux->value;
-
-	string * nombreItem = malloc(sizeof(char) * MAXCHAR);
-	printf("\nIngrese nombre del item:\n");
-	scanf("%30[^\n]s", nombreItem);
-	getchar();
-
-	Pair * item = searchMap(current->item, nombreItem);
-	if (item != NULL){
-		printf("\nEl item ya está en el inventario\n");
-		return;
-	}
-	printf("\nAgregando item..\n");
-	current->cantItems++;
-	insertMap(current->item, nombreItem, nombreItem);
-	printf("\nSe ha agregado el item..\n");
-
-	accion * accion = malloc(sizeof(accion));
-	accion->id = id_agregarItem;
-	accion->data = nombreItem;
-	append(current->pilaAcciones, accion);	// se agrega a la pila de acciones.
-	return;
-}
-
-int eliminarItem(HashMap *jugadores)
-{
-	string nombreJugador;
-	printf("\nIngrese nombre del jugador:\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
-
 	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (aux == NULL)
 	{
@@ -196,10 +156,29 @@ int eliminarItem(HashMap *jugadores)
 	}
 	datosJugador *current = aux->value;
 
-	string nombreItem;
-	printf("\nIngrese nombre del item:\n");
-	scanf("%30[^\n]s", nombreItem);
-	getchar();
+	Pair * item = searchMap(current->item, nombreItem);
+	if (item != NULL){
+		printf("\nEl item ya está en el inventario\n");
+		return 0;
+	}
+
+	printf("\nAgregando item..\n");
+	current->cantItems++;
+	insertMap(current->item, nombreItem, nombreItem);
+	printf("\nSe ha agregado el item..\n");
+
+	return 1;
+}
+
+int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
+{
+	Pair *aux = searchMap(jugadores, nombreJugador);
+	if (aux == NULL)
+	{
+		printf("%s no existe..\n", nombreJugador);
+		return 0;
+	}
+	datosJugador *current = aux->value;
 
 	Pair *item = searchMap(current->item, nombreItem);
 	if (item == NULL)
@@ -213,41 +192,22 @@ int eliminarItem(HashMap *jugadores)
 	eraseMap(current->item, nombreItem);
 	printf("\nSe eliminado el item..\n");
 
-	accion * accion = malloc(sizeof(accion));
-	accion->id = id_eliminarItem;
-	accion->data = nombreItem;
-	append(current->pilaAcciones, accion);	// se agrega a la pila de acciones.
 	return 1;
 }
 
-void agregarPuntosHabilidad(HashMap* jugadores)
+int agregarPuntosHabilidad(HashMap* jugadores, string nombreJugador, int* puntosNuevos)
 {
-	string nombreJugador;
-	printf("\nIngrese el nombre del jugador\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
-
 	Pair * current = searchMap(jugadores, nombreJugador);
 	if (current == NULL)
 	{
 		printf("\n%s no existe..\n", nombreJugador);
-		return;
+		return 0;
 	}
-
-	int puntosNuevos;
-	printf("\n¿Cuántos puntos desea agregar?\n");
-	scanf("%i", &puntosNuevos);
-
 	datosJugador * jugador = current->value;
-	jugador->habilidad += puntosNuevos;
+	jugador->habilidad += *puntosNuevos;
+	printf("\nSe han agregado %d puntos de habilidad a %s\n", *puntosNuevos, nombreJugador);
 
-	
-	accion * accion = malloc(sizeof(accion));
-	accion->id = id_agregarHabilidad;
-	accion->data = puntosNuevos;
-	ArrayList * l = jugador->pilaAcciones;
-	append(l, accion);	// se agrega a la pila de acciones
-	printf("\nPuntos agregados correctamente\n");
+
 	return 1;
 
 }
@@ -343,35 +303,36 @@ void importarDesdeCSV(HashMap* jugadores)
 }
 */
 
-void deshacerUltAccion(HashMap* jugadores)
+void deshacerUltAccion(HashMap* jugadores, string nombreJugador)
 {
-	string nombreJugador;
-	printf("\nIngrese el nombre del jugador:\n");
-	scanf("%30[^\n]s", nombreJugador);
-	getchar();
-
-	Pair * jugador = searchMap(jugadores, nombreJugador);
-	datosJugador * datosJugador = jugador->value;
-	ArrayList * l = datosJugador->pilaAcciones;
+	Pair * current = (Pair *)searchMap(jugadores, nombreJugador);
+	if (current == NULL)
+	{
+		printf("\n%s no existe..\n", nombreJugador);
+		return;
+	}
+	datosJugador* jugador = (datosJugador *) current->value;
+	ArrayList * l = jugador->pilaAcciones;
 
 	int top = get_size(l) - 1;
 	accion * accion = get(l, top);
 
-	switch (accion->id)
+	printf("\nDeshaciendo accion..\n");
+	if (accion->id == id_agregarHabilidad)
 	{
-		case id_agregarHabilidad:
-			datosJugador->habilidad -= (int) accion->data;
-			printf("\nSe han eliminado %d puntos de habilidad a %s\n", accion->data, datosJugador->nombre);
-			break;
-		case id_agregarItem:
-			eraseMap(jugadores, accion->data);
-			printf("\nSe eliminado el ultimo item\n");
-			break;
-		case id_eliminarItem:
-			string * item = malloc(sizeof(char) * MAXCHAR);
-			strcpy(item, accion->data);
-			insertMap(jugadores, item, item);
-			printf("\nSe ha recuperado el ultimo item\n");
-			break;
+		jugador->habilidad -=(int) accion->data;
+		printf("\nSe han eliminado %d puntos de habilidad a %s\n", accion->data, jugador->nombre);
+	}
+
+	if (accion->id == id_agregarItem)
+	{
+		eraseMap(jugador->pilaAcciones, accion->data);
+		printf("\nSe eliminado el ultimo item\n");
+	}
+
+	if (accion->id == id_eliminarItem)
+	{
+		insertMap(jugador->pilaAcciones, accion->data, accion->data);
+		printf("\nSe ha recuperado el ultimo item\n");
 	}
 }
