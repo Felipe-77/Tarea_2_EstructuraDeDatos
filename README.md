@@ -2,15 +2,23 @@
 
 ### Orden del codigo
 
-Tenemos 3 archivos de extension C:
-- La libreria de nuestro mapa. 
+Tenemos 4 archivos de extension C:
+- La libreria de nuestro mapa.
+- La libreria de una lista.
 - Libreria con funciones para poder realizar la tarea asignada.
 - Nuestro main, el cual se encarga de la interaccion con el usuario.
 
 Luego podemos observar una carpeta csv:
 Esta contiene 2 archivos csv para poder testear nuestro programa.
 
----
+Además escribímos un script en bash para ejecutar el código más facilmente con el comando:
+>sh execute.sh
+
+Y un comando para actualizar el repositorio con el comnando:
+>sh repo_update.sh {MESSAGE}
+
+
+ 
 
 ### Objetivo de la aplicación
 
@@ -34,17 +42,22 @@ Tal como:
   - Mostrarlos todos
   - Mostrar solo jugadores que compartan un mismo item
 - Agregar y elminar items a cada perfil
+<<<<<<< HEAD
+=======
+- Exportar e importar jugadores.
+- Agregar puntos de habilidad a un jugador.
+- Deshacer la última acción de un jugador.
+>>>>>>> 763e8a71db0a2b5443ba5a58f4494a82d61b5c51
 ---
 
 ### Diseño de la aplicación
 
 Para poder almacenar la informacion, crearemos un mapa de jugadores.
-Para acceder a cada jugador usaremos su nombre como clave, dentro almacenaremos.
+Para acceder a cada jugador usaremos su nombre como clave, dentro almacenaremos:
 - un nombre = char[30]
 - un int para puntos de habilidad
 - un int para cantidad de items
-- una lista de un char de cada item.
+- una lista de un items.
 
-
-A la vez tendremos un mapa que guardara listas de jugadores con un item en común. La clave para acceder a cada dato, es el nombre de ese mismo  item.
+Por otro lado, es necesario implementar un mapa de items para acceder a ellos facilmente y a la lista de jugadores que tienen ese item.
 
