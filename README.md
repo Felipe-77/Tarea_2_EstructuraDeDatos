@@ -42,14 +42,9 @@ Tal como:
   - Mostrarlos todos
   - Mostrar solo jugadores que compartan un mismo item
 - Agregar y elminar items a cada perfil
-<<<<<<< HEAD
-=======
 - Exportar e importar jugadores.
 - Agregar puntos de habilidad a un jugador.
 - Deshacer la última acción de un jugador.
->>>>>>> 763e8a71db0a2b5443ba5a58f4494a82d61b5c51
----
-
 ### Diseño de la aplicación
 
 Para poder almacenar la informacion, crearemos un mapa de jugadores.
