@@ -70,7 +70,7 @@ HashMap *createHashMap(long capacity)
 {
 	HashMap *new = NULL;
 	if (capacity == 0)
-		new = createMap(100);
+		new = createMap(50);
 	else
 		new = createMap(capacity);
 
@@ -110,14 +110,14 @@ void crearPerfil(HashMap *jugadores, string nombreJugador)
 	Pair *aux = (Pair *)searchMap(jugadores, nombreJugador);
 	if (aux)
 	{
-		printf("%s ya existe..\n", nombreJugador);
+		printf("\nEl jugador %s ya existe..\n", nombreJugador);
 		return;
 	}
 
 	datosJugador *new = crearJugador();
 	strcpy(new->nombre, nombreJugador);
 	insertMap(jugadores, new->nombre, new);
-	printf("\nJugador %s creado correctamente\n", nombreJugador);
+	printf("\nJugador '%s' creado correctamente\n", nombreJugador);
 	return;
 }
 
@@ -133,14 +133,14 @@ void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 	Pair *aux = (Pair *)searchMap(jugadores, nombreJugador);
 	if (!aux)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return;
 	}
 
 	datosJugador *current = aux->value;
 	if (!current)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return;
 	}
 
@@ -149,7 +149,7 @@ void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 
 	if (current->cantItems == 0)
 	{
-		printf("Inventario vacio..\n");
+		printf("Inventario vacío..\n");
 		return;
 	}
 
@@ -166,7 +166,7 @@ int agregarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *aux = (Pair *)searchMap(jugadores, nombreJugador);
 	if (aux == NULL)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return 0;
 	}
 	datosJugador *current = aux->value;
@@ -190,7 +190,7 @@ int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *aux = (Pair *)searchMap(jugadores, nombreJugador);
 	if (aux == NULL)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return 0;
 	}
 	datosJugador *current = aux->value;
@@ -198,14 +198,14 @@ int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *item = (Pair *)searchMap(current->item, nombreItem);
 	if (item == NULL)
 	{
-		printf("\n%s no existe..\n", nombreItem);
+		printf("\n%s no posee el item %s..\n", nombreJugador, nombreItem);
 		return 0;
 	}
 
 	printf("\nEliminando item..\n");
 	current->cantItems--;
 	eraseMap(current->item, nombreItem);
-	printf("\nSe eliminado el item..\n");
+	printf("\nSe ha eliminado el item..\n");
 
 	return 1;
 }
@@ -215,16 +215,14 @@ int agregarPuntosHabilidad(HashMap* jugadores, string nombreJugador, int puntosN
 	Pair * current = (Pair *)searchMap(jugadores, nombreJugador);
 	if (current == NULL)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return 0;
 	}
 	datosJugador * jugador = current->value;
 	jugador->habilidad += puntosNuevos;
 	printf("\nSe han agregado %d puntos de habilidad a %s\n", puntosNuevos, nombreJugador);
 
-
 	return 1;
-
 }
 
 void importarDesdeCSV(HashMap* jugadores, string archivo) 
@@ -266,49 +264,51 @@ void importarDesdeCSV(HashMap* jugadores, string archivo)
     		columna++;
     	}
     	insertMap(jugadores, jugador->nombre, jugador);
-		printf("\ninsercion de linea %d\n", linea);
+		printf("\nInserción de linea %d\n", linea);
   	}
 
+    system("clear");
   	printf("\nArchivo importado correctamente\n");
   	fclose(csv);
   	return;
 }
 
 void exportarCsv(HashMap* jugadores, string archivo) {
-
-  	FILE *nuevoCsv = fopen(archivo, "r");
+  FILE *nuevoCsv = fopen(archivo, "r");
   
-  	if (nuevoCsv) {
-    	printf("\nEl archivo ya existe\n");
-    	fclose(nuevoCsv);
-    	return;
-  	}
+  if (nuevoCsv) {
+    printf("\nEl archivo ya existe\n");
+    fclose(nuevoCsv);
+    return;
+  }
 
-  	nuevoCsv = fopen(archivo, "w");
+  nuevoCsv = fopen(archivo, "w");
 
-  	if (!nuevoCsv) {
-    	printf("No se puede crear el archivo\n");
-    	fclose(nuevoCsv);
-    	return;
-  	}
+  if (!nuevoCsv) {
+    printf("No se puede crear el archivo\n");
+    fclose(nuevoCsv);
+    return;
+  }
 	
-  	Pair * current = (Pair *)firstMap(jugadores);
-  	while (current != NULL) {
-		datosJugador * jugador = current->value;
-    	fprintf(nuevoCsv, "%s,%d,%d", jugador->nombre, jugador->habilidad, jugador->cantItems);
+  Pair * current = (Pair *)firstMap(jugadores);
+  while (current != NULL) {
+	  datosJugador * jugador = current->value;
+    fprintf(nuevoCsv, "%s,%d,%d", jugador->nombre, jugador->habilidad, jugador->cantItems);
 
-    	Pair * item = (Pair *)firstMap(jugador->item);
-		while(item != NULL){
-			fprintf(nuevoCsv, ",%s", item->key);
-			item = (Pair *)nextMap(jugador->item);
-		}
-		fprintf(nuevoCsv, "\n");
-		current = (Pair *)nextMap(jugadores);
-  	}
+    Pair * item = (Pair *)firstMap(jugador->item);
+	  while(item != NULL){
+		  fprintf(nuevoCsv, ",%s", item->key);
+		  item = (Pair *)nextMap(jugador->item);
+	  }
+	  fprintf(nuevoCsv, "\n");
+	  current = (Pair *)nextMap(jugadores);
+  }
 	fclose(nuevoCsv);
-  	printf("\nArchivo exportado correctamente\n");
+
+  system("clear");
+  printf("\nArchivo exportado correctamente\n");
   	
-  	return;
+  return;
 }
 
 
@@ -317,7 +317,7 @@ void deshacerUltAccion(HashMap* jugadores, string nombreJugador)
 	Pair * current = (Pair *)searchMap(jugadores, nombreJugador);
 	if (current == NULL)
 	{
-		printf("\n%s no existe..\n", nombreJugador);
+		printf("\nEl jugador %s no existe..\n", nombreJugador);
 		return;
 	}
 
@@ -343,14 +343,14 @@ void deshacerUltAccion(HashMap* jugadores, string nombreJugador)
 	{
 		eraseMap(jugador->item, ultAccion->data);
 		jugador->cantItems--;
-		printf("\nSe eliminado el ultimo item\n");
+		printf("\nSe ha eliminado el último item\n");
 	}
 
 	if (id == id_eliminarItem)
 	{
 		insertMap(jugador->item, ultAccion->data, ultAccion->data);
 		jugador->cantItems++;
-		printf("\nSe ha recuperado el ultimo item\n");
+		printf("\nSe ha recuperado el último item\n");
 	}
 
 	pop(l, top);

@@ -42,9 +42,9 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 		printf("2) Mostrar perfil\n");
 		printf("3) Agregar puntos de habilidad\n");
 		printf("4) Deshacer última acción\n");
-		printf("\n0) Volver al menu principal\n");
+		printf("\n0) Volver al menú principal\n");
     
-    	printf("> ");
+    printf("> ");
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
@@ -99,7 +99,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        		SEPARADOR;
+        SEPARADOR;
 				break;
 		}
 	}
@@ -118,9 +118,9 @@ void menuAdministrarItems(HashMap* jugadores){
 		printf("1) Agregar item a jugador\n");
 		printf("2) Eliminar item de jugador\n");
 		printf("3) Mostrar todos los jugadores con un item\n");
-		printf("\n0) Volver al menu principal\n");
+    printf("\n0) Volver al menú principal\n");
 
-    	printf("> ");
+    printf("> ");
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
@@ -181,7 +181,7 @@ void menuAdministrarItems(HashMap* jugadores){
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        		SEPARADOR;
+        SEPARADOR;
 				break;
 		}
 	}
@@ -197,7 +197,7 @@ void menuImportarExportar(HashMap* jugadores){
 		//opciones
 		printf("1) Importar datos\n");
 		printf("2) Exportar datos\n");
-		printf("\n0) Volver al menu principal\n");
+		printf("\n0) Volver al menú principal\n");
 
     	printf("> ");
 		scanf("%i", &opcion);
@@ -206,16 +206,16 @@ void menuImportarExportar(HashMap* jugadores){
 			case 1:
 				printf("\nIngrese nombre del archivo:\n");
 				printf("> ");
-        		scanf("%30[^\n]s", archivo);
+        scanf("%30[^\n]s", archivo);
 				getchar();
 
 				importarDesdeCSV(jugadores, archivo);
 				SEPARADOR;
 				break;
 			case 2:
-				printf("\nIngrese nombre para el nuevo archivo archivo:\n");
+				printf("\nIngrese nombre para el nuevo archivo:\n");
 				printf("> ");
-        		scanf("%30[^\n]s", archivo);
+        scanf("%30[^\n]s", archivo);
 				getchar();
 
 				exportarCsv(jugadores, archivo);
@@ -226,7 +226,7 @@ void menuImportarExportar(HashMap* jugadores){
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        		SEPARADOR;
+        SEPARADOR;
 				break;
 		}
 	}
@@ -242,7 +242,7 @@ int main()
 	SEPARADOR;
 
 	while (1){
-		printf("MENÚ PRINCPAL\n");
+		printf("MENÚ PRINCIPAL\n");
 		//opciones
 		printf("1) Opciones de jugador/a\n");
 		printf("2) Administrar items\n");
@@ -250,8 +250,8 @@ int main()
 		printf("4) Mostrar todos los jugadores\n");
 		printf("\n0) Salir\n");
 		
-    	printf("> ");
-    	scanf("%i", &opcion);
+    printf("> ");
+    scanf("%i", &opcion);
 		getchar();
 
 		//SEPARADOR;
@@ -274,11 +274,11 @@ int main()
 				break;
 			case 0:
 				printf("\nSaliendo...\n");
-        		SEPARADOR;
+        SEPARADOR;
 				return 0;
 			default:
 				printf("\nOpción inválida\n");
-        		SEPARADOR;
+        SEPARADOR;
 				break;
 		}
 	}
