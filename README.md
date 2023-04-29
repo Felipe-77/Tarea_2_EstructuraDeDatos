@@ -14,11 +14,6 @@ Esta contiene 2 archivos csv para poder testear nuestro programa.
 Además escribímos un script en bash para ejecutar el código más facilmente con el comando:
 >sh execute.sh
 
-Y un comando para actualizar el repositorio con el comnando:
->sh repo_update.sh {MESSAGE}
-
-
- 
 
 ### Objetivo de la aplicación
 
@@ -52,7 +47,61 @@ Para acceder a cada jugador usaremos su nombre como clave, dentro almacenaremos:
 - un nombre = char[30]
 - un int para puntos de habilidad
 - un int para cantidad de items
-- una lista de un items.
+- un mapa de un items.
 
-Por otro lado, es necesario implementar un mapa de items para acceder a ellos facilmente y a la lista de jugadores que tienen ese item.
+La decision de guardar un puntero a un mapa es porque, nos da los siguientes beneficios importantes. Estos correspondientes a ciertas operaciones que es util si un jugador tiene muchos items.
 
+La busqueda de un mapa siempre sera una complejidad O(1), esto nos ayuda mucho, para poder buscar los items.
+Lo que es conveniente si deseamos poder analizar si un jugador posee algun item. Y en el caso de la eliminacion es mejor que su alternativa, la lista, que para datos que podrian hallarse en la mitad seria mas lento.
+
+Podriamos decir entonces que, si quisiesemos recorrer jugadores solo con un item, revisando que cada jugador tenga el item que buscamos. Para una lista seria, O(n*n) = O(n²) al hacer una busqueda lineal dos veces. Y en contraste con este mapa, O(n)*O(1) = O(n). Lo cual es bastante mejor.
+
+---
+
+Sobre las operaciones de recuperar acciones pasadas, implentamos una pila hecha con un arreglo circular, que guarda lo siguiente:
+
+- id del tipo de accion.
+- informacion que hay que restaurar.
+
+De esta forma ahorramos espacio, al solo guardar datos que cambiaron, y no toda la informacion de el sistema.
+La forma en la que esto funciona es la siguiente. Cada vez que se realiza una accion, como por ejemplo agregar item, eliminarlo, agregar puntos. Se guarda la informacion antes de ser modificada en la pila junto al tipo de modificacion. Luego al llamar la funcion que deshace, se analiza el id, y gracias a eso realizamos operaciones inversas para restaurar el estado anterior de el jugador.
+
+Esto si bien consideramos ventajoso, como se menciono, para el ahorro de memoria. Podria no resultar tan rapido como otros metodos, sin embargo, gracias a que como mencionamos las operaciones de mapa son muy rapidas, no consideramos que sea una perdida muy grande.
+ 
+ ---
+
+
+Rubrica Trabajo en equipo:
+
+-    Participacion activa y equitativa: 15
+
+-    Resolucion de conflictos:18
+
+-    Colaboración:18
+
+-    Responsabilidad:18
+
+-    Comunicación:18
+
+Criterio individual:
+
+-    Participación:
+-        Manuel: 20
+-        Eliseo: 
+-        Felipe: 
+-    Responsabilidad
+-        Manuel: 18
+-        Eliseo: 
+-        Felipe: 
+-    Comunicación
+-        Manuel: 20
+-        Eliseo: 
+-        Felipe: 
+-    Calidad del Trabajo
+-        Manuel: 20
+-        Eliseo: 
+-        Felipe: 
+-    Trabajo en equipo
+-        Manuel: 17
+-        Eliseo: 
+-        Felipe: 
