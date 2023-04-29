@@ -18,7 +18,7 @@ struct datosJugador
 	string nombre;
 	int habilidad;
 	int cantItems;
-	HashMap *item; // podria ser una lista u otra cosa igualmente
+	HashMap *item; 
 	ArrayList *pilaAcciones;
 };
 
@@ -28,7 +28,7 @@ struct accion
 	void * data;
 };
 
-
+//Fucnciones para los sub menus
 void menuOpcionesDeJugador(HashMap* jugadores){
 	int opcion;
 	int puntosHabilidad;
@@ -42,16 +42,16 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 		printf("2) Mostrar perfil\n");
 		printf("3) Agregar puntos de habilidad\n");
 		printf("4) Deshacer última acción\n");
-		printf("0) Volver al menu principal\n");
+		printf("\n0) Volver al menu principal\n");
     
-    printf("> ");
+    	printf("> ");
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
 			case 1:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
 				crearPerfil(jugadores, nombreJugador);
@@ -60,7 +60,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 			case 2:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
 				mostrarPerfil(jugadores, nombreJugador);
@@ -69,12 +69,12 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 			case 3:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
 				printf("\n¿Cuántos puntos de habilidad desea agregar?\n");
 				printf("> ");
-        scanf("%i", &puntosHabilidad);
+        		scanf("%i", &puntosHabilidad);
 				getchar();
 
 				if (agregarPuntosHabilidad(jugadores, nombreJugador, puntosHabilidad) == 1){
@@ -88,7 +88,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 			case 4:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
 				deshacerUltAccion(jugadores, nombreJugador);
@@ -99,7 +99,7 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        SEPARADOR;
+        		SEPARADOR;
 				break;
 		}
 	}
@@ -108,16 +108,19 @@ void menuOpcionesDeJugador(HashMap* jugadores){
 void menuAdministrarItems(HashMap* jugadores){
 	int opcion;
 	string nombreJugador;
+	string * nombreItem = malloc(sizeof(char) * MAXCHAR);
 
-  SEPARADOR;
+
+  	SEPARADOR;
 	while (1){
 		printf("Seleccione una de las siguientes opciones:\n\n");
 		//opciones
 		printf("1) Agregar item a jugador\n");
 		printf("2) Eliminar item de jugador\n");
-		printf("0) Volver al menu principal\n");
+		printf("3) Mostrar todos los jugadores con un item\n");
+		printf("\n0) Volver al menu principal\n");
 
-    printf("> ");
+    	printf("> ");
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
@@ -126,13 +129,12 @@ void menuAdministrarItems(HashMap* jugadores){
 			case 1:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
-				string* nombreItem = malloc(sizeof(char) * MAXCHAR);
 				printf("\nIngrese nombre del item:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreItem);
+        		scanf("%30[^\n]s", nombreItem);
 				getchar();
 
 				if (agregarItem(jugadores, nombreJugador, nombreItem) == 1){
@@ -146,12 +148,12 @@ void menuAdministrarItems(HashMap* jugadores){
 			case 2:
 				printf("\nIngrese nombre del jugador:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreJugador);
+        		scanf("%30[^\n]s", nombreJugador);
 				getchar();
 
 				printf("\nIngrese nombre del item:\n");
 				printf("> ");
-        scanf("%30[^\n]s", nombreItem);
+        		scanf("%30[^\n]s", nombreItem);
 				getchar();
 
 				if (eliminarItem(jugadores, nombreJugador, nombreItem) == 1){
@@ -165,12 +167,21 @@ void menuAdministrarItems(HashMap* jugadores){
 				}
 				SEPARADOR;
 				break;
+			case 3:
+				printf("\nIngrese nombre del item:\n");
+				printf("> ");
+				scanf("%30[^\n]s", nombreItem);
+				getchar();
+
+				mostrarTodosConUnItem(jugadores, nombreItem);
+				SEPARADOR;
+				break;
 			case 0:
 				printf("\nVolviendo...\n");
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        SEPARADOR;
+        		SEPARADOR;
 				break;
 		}
 	}
@@ -186,23 +197,28 @@ void menuImportarExportar(HashMap* jugadores){
 		//opciones
 		printf("1) Importar datos\n");
 		printf("2) Exportar datos\n");
-		printf("0) Volver al menu principal\n");
+		printf("\n0) Volver al menu principal\n");
 
-    printf("> ");
+    	printf("> ");
 		scanf("%i", &opcion);
 		getchar();
 		switch (opcion){
 			case 1:
 				printf("\nIngrese nombre del archivo:\n");
 				printf("> ");
-        scanf("%30[^\n]s", archivo);
+        		scanf("%30[^\n]s", archivo);
 				getchar();
 
 				importarDesdeCSV(jugadores, archivo);
 				SEPARADOR;
 				break;
 			case 2:
-				//exportarCsv(jugadores);
+				printf("\nIngrese nombre para el nuevo archivo archivo:\n");
+				printf("> ");
+        		scanf("%30[^\n]s", archivo);
+				getchar();
+
+				exportarCsv(jugadores, archivo);
 				SEPARADOR;
 				break;
 			case 0:
@@ -210,7 +226,7 @@ void menuImportarExportar(HashMap* jugadores){
 				return;
 			default:
 				printf("\nOpción inválida\n");
-        SEPARADOR;
+        		SEPARADOR;
 				break;
 		}
 	}
@@ -232,10 +248,10 @@ int main()
 		printf("2) Administrar items\n");
 		printf("3) Importar/Exportar\n");
 		printf("4) Mostrar todos los jugadores\n");
-		printf("0) Salir\n");
+		printf("\n0) Salir\n");
 		
-    printf("> ");
-    scanf("%i", &opcion);
+    	printf("> ");
+    	scanf("%i", &opcion);
 		getchar();
 
 		//SEPARADOR;
@@ -258,11 +274,11 @@ int main()
 				break;
 			case 0:
 				printf("\nSaliendo...\n");
-        SEPARADOR;
+        		SEPARADOR;
 				return 0;
 			default:
 				printf("\nOpción inválida\n");
-        SEPARADOR;
+        		SEPARADOR;
 				break;
 		}
 	}

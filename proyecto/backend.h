@@ -23,8 +23,8 @@ void mostrarPerfil(HashMap* jugadores, string nombreJugador);
 void mostrarTodos(HashMap* mapa);
 
 void importarDesdeCSV(HashMap* jugadores, string archivo);
-void exportarCsv(HashMap* jugadores);
-
+void exportarCsv(HashMap* jugadores, string archivo);
+void mostrarTodosConUnItem(HashMap* jugadores, string nombreItem);
 
 
 
