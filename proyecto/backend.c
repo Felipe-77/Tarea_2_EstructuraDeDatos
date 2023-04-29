@@ -47,6 +47,7 @@ void mostrarItems(HashMap *mapa) // imprime todas las keys de un mapa.
 		printf("\n- %s", current->key);
 		current = nextMap(mapa);
 	}
+  printf("\n");
 }
 
 void mostrarTodos(HashMap* mapa) // imprime todas las keys de un mapa.
@@ -54,10 +55,11 @@ void mostrarTodos(HashMap* mapa) // imprime todas las keys de un mapa.
 	Pair * current = firstMap(mapa);
 	while (current != NULL)
 	{
+    printf("\n--------------------------------\n");
 		mostrarPerfil(mapa, current->key);
-		printf("\n--------------------------------\n");
 		current = nextMap(mapa);
 	}
+  printf("\n--------------------------------\n");
 }
 
 
@@ -140,17 +142,16 @@ void mostrarPerfil(HashMap *jugadores, string nombreJugador)
 		return;
 	}
 
-	printf("\n");
-	printf("Datos de %s:\n", nombreJugador);
-	printf("Puntos de habilidad : %d\n", current->habilidad);
+	printf("\nDatos de %s\n", nombreJugador);
+	printf("Puntos de habilidad: %d\n", current->habilidad);
 
 	if (current->cantItems == 0)
 	{
-		printf("Inv vacio..\n");
+		printf("Inventario vacio..\n");
 		return;
 	}
 
-	printf("Contenido del inventario :\n");
+	printf("Contenido del inventario:\n");
 	if (current->cantItems > 1)
 		printf("%d items\n", current->cantItems);
 	else
@@ -163,7 +164,7 @@ int agregarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (aux == NULL)
 	{
-		printf("%s no existe..\n", nombreJugador);
+		printf("\n%s no existe..\n", nombreJugador);
 		return 0;
 	}
 	datosJugador *current = aux->value;
@@ -187,7 +188,7 @@ int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *aux = searchMap(jugadores, nombreJugador);
 	if (aux == NULL)
 	{
-		printf("%s no existe..\n", nombreJugador);
+		printf("\n%s no existe..\n", nombreJugador);
 		return 0;
 	}
 	datosJugador *current = aux->value;
@@ -195,7 +196,7 @@ int eliminarItem(HashMap *jugadores, string nombreJugador, string nombreItem)
 	Pair *item = searchMap(current->item, nombreItem);
 	if (item == NULL)
 	{
-		printf("%s no existe..\n", nombreItem);
+		printf("\n%s no existe..\n", nombreItem);
 		return 0;
 	}
 
