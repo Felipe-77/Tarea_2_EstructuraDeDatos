@@ -230,8 +230,6 @@ void importarDesdeCSV(HashMap* jugadores, string archivo)
 	free(jugadores);
 	jugadores = createHashMap(0);
 	FILE *csv = fopen(archivo, "r");
-	clean(jugadores);
-	jugadores = createHashMap(1000);
 	if (!csv) {
     	printf("\nEl archivo no existe\n");
     	return;
@@ -249,8 +247,10 @@ void importarDesdeCSV(HashMap* jugadores, string archivo)
     	char *valor = strtok(buffer, ",");
 
     	while (valor != NULL) {
-    		if (columna == 1)
+    		if (columna == 1){
         		strcpy(jugador->nombre, valor);
+				puts(jugador->nombre);
+			}
     		if (columna == 2)
         		jugador->habilidad = (int)strtol(valor, NULL, 10); 
       		if (columna == 3)
@@ -343,12 +343,14 @@ void deshacerUltAccion(HashMap* jugadores, string nombreJugador)
 	if (id == id_agregarItem)
 	{
 		eraseMap(jugador->item, ultAccion->data);
+		jugador->cantItems--;
 		printf("\nSe eliminado el ultimo item\n");
 	}
 
 	if (id == id_eliminarItem)
 	{
 		insertMap(jugador->item, ultAccion->data, ultAccion->data);
+		jugador->cantItems++;
 		printf("\nSe ha recuperado el ultimo item\n");
 	}
 
