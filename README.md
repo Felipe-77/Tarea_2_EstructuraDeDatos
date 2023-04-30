@@ -14,6 +14,8 @@ Esta contiene 2 archivos csv para poder testear nuestro programa.
 Además escribímos un script en bash para ejecutar el código más facilmente con el comando:
 >sh execute.sh
 
+Lo puedes encontrar en la carpeta proyecto.
+
 
 ### Objetivo de la aplicación
 
