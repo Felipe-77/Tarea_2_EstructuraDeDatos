@@ -88,20 +88,20 @@ Criterio individual:
 -    Participación:
 -        Manuel: 20
 -        Eliseo: 17
--        Felipe: 
+-        Felipe: 20
 -    Responsabilidad
 -        Manuel: 18
 -        Eliseo: 17
--        Felipe: 
+-        Felipe: 18
 -    Comunicación
 -        Manuel: 20
 -        Eliseo: 18
--        Felipe: 
+-        Felipe: 18
 -    Calidad del Trabajo
 -        Manuel: 20
 -        Eliseo: 18
--        Felipe: 
+-        Felipe: 19
 -    Trabajo en equipo
 -        Manuel: 17
 -        Eliseo: 17
--        Felipe: 
+-        Felipe: 17
